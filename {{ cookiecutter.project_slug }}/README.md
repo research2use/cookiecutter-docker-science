@@ -18,8 +18,9 @@ After creating the Docker image, you run the following command.
 - `make create-container`
 
 The above command creates a Docker container from the Docker image which we create with `make init`, and then
-login to the Docker container. Now we made the development environment. For create and evaluate the model,
-you run the following command.
+login to the Docker container. Now we made the development environment. As a final manual step you need to install the package
+with pip in edit mode, so that you can easily update and reference your package in tests, scripts and notebooks:
+`pip install -e .`
 
 ## Development with Docker container
 
@@ -56,14 +57,6 @@ When you check the code quality, please run `make lint`
 ### Run test
 
 When you run test in `tests` directory, please run `make test`
-
-### Sync data source to local data directory
-
-When you want to download data in remote data sources such as Amazon S3 or NFS, `sync-from-remote` target downloads them.
-
-### Sync local data to remote source
-
-When you modify the data in local environment, `sync-to-remote` target uploads the local files stored in `data` to specified data sources such as S3 or NFS directories.
 
 ### Show profile of Docker container
 
