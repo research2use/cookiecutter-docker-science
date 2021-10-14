@@ -81,15 +81,6 @@ help: ## show this message
 
 init: init-docker sync-from-source ## initialize repository for traning
 
-sync-from-source: ## download data data source to local envrionment
-{%- if cookiecutter.data_source_type == 's3' %}
-	-aws s3 sync $(DATA_SOURCE) ./data/
-{%- elif cookiecutter.data_source_type == 'nfs' %}
-	cp -r $(DATA_SOURCE)/* ./data/
-{%- elif cookiecutter.data_source_type == 'url' %}
-	wget $(DATA_SOURCE) -P ./data/
-{% endif %}
-
 init-docker: ## initialize docker image
 	$(DOCKER) build -t $(BASE_IMAGE_NAME) -f $(BASE_DOCKERFILE) --build-arg UID=$(shell id -u) .
 	$(DOCKER) build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
@@ -97,15 +88,6 @@ init-docker: ## initialize docker image
 init-docker-no-cache: ## initialize docker image without cache
 	$(DOCKER) build --no-cache -t $(BASE_IMAGE_NAME) -f $(BASE_DOCKERFILE) --build-arg UID=$(shell id -u) .
 	$(DOCKER) build --no-cache -t $(IMAGE_NAME) -f $(DOCKERFILE) .
-
-sync-to-source: ## sync local data to data source
-{%- if cookiecutter.data_source_type == 's3' %}
-	-aws s3 sync ./data/ $(DATA_SOURCE)
-{%- elif cookiecutter.data_source_type == 'nfs' %}
-	cp -r ./data/* $(DATA_SOURCE)/
-{%- elif cookiecutter.data_source_type == 'url' %}
-	echo "no sync target for url data source..."
-{% endif %}
 
 create-container: ## create docker container
 	$(DOCKER) run -it -v $(PWD):/work -p $(JUPYTER_HOST_PORT):$(JUPYTER_CONTAINER_PORT) --name $(CONTAINER_NAME) $(IMAGE_NAME)
@@ -154,6 +136,7 @@ clean-container: ## remove Docker container
 
 clean-image: ## remove Docker image
 	-$(DOCKER) image rm $(IMAGE_NAME)
+	-$(DOCKER) image rm $(BASE_IMAGE_NAME)
 
 format:
 {%- if cookiecutter.formatter_type == 'black' %}
