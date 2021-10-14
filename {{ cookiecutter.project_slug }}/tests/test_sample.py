@@ -1,9 +1,6 @@
-import unittest
+import pytest
 
 
-class TestSample(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def test_add(self):
-        self.assertEqual((3 + 4), 7)
+class test_sample():
+    assert 1 == 1
+    
